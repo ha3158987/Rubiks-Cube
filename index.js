@@ -25,6 +25,7 @@ class PushWord {
         const inputValue = input.value.split(" ");
 
         const sortedWord = this.moveElement(inputValue[0], inputValue[1], inputValue[2]);
+        this.showAnswerOnUI(sortedWord);
 
         form.reset();
         input.focus();
@@ -57,6 +58,11 @@ class PushWord {
 
             return arrayWord.join("");
         }
+    }
+
+    showAnswerOnUI(answer) {
+        const answerBox = document.querySelector(".answer");
+        answerBox.innerHTML = answer;
     }
 
 }
