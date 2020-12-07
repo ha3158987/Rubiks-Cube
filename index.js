@@ -24,13 +24,13 @@ class PushWord {
         const input = document.querySelector(".word");
         const inputValue = input.value.split(" ");
 
-        const arrangedWord = this.moveAlphabet(inputValue[0], inputValue[1], inputValue[2]);
+        const sortedWord = this.moveElement(inputValue[0], inputValue[1], inputValue[2]);
 
         form.reset();
         input.focus();
     }
 
-    moveAlphabet(word, numOfMoves, direction){
+    moveElement(word, numOfMoves, direction){
         const absoluteValue = Math.abs(numOfMoves);
         let arrayWord = word.split("");
         let leftOrRight;
