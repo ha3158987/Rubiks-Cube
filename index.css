@@ -12,16 +12,38 @@ html {
   text-rendering: optimizeLegibility; /*텍스트 디스플레이를 최적화하는 메소드*/
 }
 
+header {
+  height: 5rem;
+}
+
+h1 {
+  margin-left: 2rem;
+  margin-top: 2rem;
+}
+
+label {
+  margin-left: 2rem;
+}
+
 input {
-  width: 40rem;
+  width: 35rem;
   height: 2rem;
   font-size: 0.7rem;
-  margin: 0.5rem 1rem;
+  margin: 0.5rem 2rem;
+  border: 1px solid #555;
+}
+
+.answer {
+  width: 35rem;
+  height: 2rem;
+  font-size: 0.7rem;
+  margin: 0.5rem 2rem;
+  border: 1px solid #555;
 }
 
 .button_enter {
   border: 1px solid #555;
   padding: 0.5rem 2rem;
-  margin: 1rem 1rem;
+  margin: 1rem 2rem;
   font-size: 1rem;
 }
