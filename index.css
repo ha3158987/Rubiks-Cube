@@ -1,0 +1,27 @@
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+html {
+  background-color: #fff;
+  scroll-behavior: smooth;
+  color: #555;
+  font-size: 30px;
+  text-rendering: optimizeLegibility; /*텍스트 디스플레이를 최적화하는 메소드*/
+}
+
+input {
+  width: 40rem;
+  height: 2rem;
+  font-size: 0.7rem;
+  margin: 0.5rem 1rem;
+}
+
+.button_enter {
+  border: 1px solid #555;
+  padding: 0.5rem 2rem;
+  margin: 1rem 1rem;
+  font-size: 1rem;
+}
