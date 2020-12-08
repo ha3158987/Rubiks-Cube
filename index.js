@@ -8,6 +8,7 @@
 - 컴파일 및 실행되지 않을 경우 불합격.
 - 자기만의 기준으로 최대한 간결하게 코드를 작성한다.
 */
+
 class PushWord {
 
     init() {
@@ -16,10 +17,10 @@ class PushWord {
 
     addClickEvent(){
         const button = document.querySelector(".button_enter");
-        button.addEventListener("click", this.getInputValue.bind(this));
+        button.addEventListener("click", this.getInputValue.bind(this, event));
     }
 
-    getInputValue(){
+    getInputValue(event){
         const form = document.querySelector(".input_form");
         const input = document.querySelector(".word");
         const inputValue = input.value.split(" ");
@@ -33,29 +34,28 @@ class PushWord {
 
     moveElement(word, numOfMoves, direction){
         const absoluteValue = Math.abs(numOfMoves);
+        const numOfRequiredLoops = absoluteValue % word.length;
         let arrayWord = word.split("");
         let leftOrRight;
         direction === "r" || direction === "R" ? leftOrRight = "right" : leftOrRight = "left";
 
-        if(word.length === absoluteValue || absoluteValue === 0){
+        if(word.length === numOfRequiredLoops || numOfRequiredLoops === 0){
             return arrayWord.join("");
         }
 
         if ((numOfMoves[0] === "-" && leftOrRight === "right") || (JSON.parse(numOfMoves * 1) > 0 && leftOrRight === "left")) {
-            for (let i = 1; i <= absoluteValue; i++){
+            for (let i = 1; i <= numOfRequiredLoops; i++){
                 const shiftedLetter = arrayWord.shift();
                 arrayWord.push(shiftedLetter);
             }
-
             return arrayWord.join("");
         }
 
         if ((numOfMoves[0] === "-" && leftOrRight === "left") || (JSON.parse(numOfMoves * 1) > 0 && leftOrRight === "right")) {
-            for (let i = 1; i <= absoluteValue; i++){
+            for (let i = 1; i <= numOfRequiredLoops; i++){
                 const poppedLetter = arrayWord.pop();
                 arrayWord.unshift(poppedLetter);
             }
-
             return arrayWord.join("");
         }
     }
