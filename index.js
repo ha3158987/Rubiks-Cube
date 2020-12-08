@@ -24,10 +24,9 @@ class PushWord {
         const form = document.querySelector(".input_form");
         const input = document.querySelector(".word");
         const inputValue = input.value.split(" ");
-
         const sortedWord = this.moveElement(inputValue[0], inputValue[1], inputValue[2]);
-        this.showAnswerOnUI(sortedWord);
 
+        this.showAnswerOnUI(sortedWord);
         form.reset();
         input.focus();
     }
@@ -44,20 +43,28 @@ class PushWord {
         }
 
         if ((numOfMoves[0] === "-" && leftOrRight === "right") || (JSON.parse(numOfMoves * 1) > 0 && leftOrRight === "left")) {
-            for (let i = 1; i <= numOfRequiredLoops; i++){
-                const shiftedLetter = arrayWord.shift();
-                arrayWord.push(shiftedLetter);
-            }
-            return arrayWord.join("");
+            return this.takeElementFromLeft(numOfRequiredLoops, arrayWord);
         }
 
         if ((numOfMoves[0] === "-" && leftOrRight === "left") || (JSON.parse(numOfMoves * 1) > 0 && leftOrRight === "right")) {
-            for (let i = 1; i <= numOfRequiredLoops; i++){
-                const poppedLetter = arrayWord.pop();
-                arrayWord.unshift(poppedLetter);
-            }
-            return arrayWord.join("");
+            return this.takeElementFromRight(numOfRequiredLoops, arrayWord);
         }
+    }
+
+    takeElementFromRight(numOfLoop, array) {
+        for (let i = 1; i <= numOfLoop; i++){
+            const poppedElement = array.pop();
+            array.unshift(poppedElement);
+        }
+        return array.join("");
+    }
+
+    takeElementFromLeft(numOfLoop, array) {
+        for (let i = 1; i <= numOfLoop; i++){
+            const shiftedElement = array.shift();
+            array.push(shiftedElement);
+        }
+        return array.join("");
     }
 
     showAnswerOnUI(answer) {
