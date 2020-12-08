@@ -20,8 +20,8 @@ class PushWord {
         button.addEventListener("click", this.getInputValue.bind(this, event));
     }
 
-    getInputValue(event){
-        const form = document.querySelector(".input_form");
+    getInputValue(){
+        const form = document.querySelector(".input_form1");
         const input = document.querySelector(".word");
         const inputValue = input.value.split(" ");
         const sortedWord = this.moveElement(inputValue[0], inputValue[1], inputValue[2]);
