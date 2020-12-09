@@ -76,5 +76,3 @@ class PushWord {
 
 const pushWordCalculator = new PushWord();
 pushWordCalculator.init();
-// export const wordRotator = pushWordCalculator;
-// export { pushWordCalculator as wordRotator };
