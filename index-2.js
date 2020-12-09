@@ -26,8 +26,16 @@ class Model {
             ["G", "B", "B"]
         ];
 
-        this.direction = {
-            "U": () => this.takeElementFromLeft(this.cube[0])
+        this.direction = {      //엘리먼트가 한칸씩 움직인 array를 리턴받음 ["w", "R", "R"]
+            "U": () => this.takeElementFromLeft(this.cube[0]),
+            "U'": () => this.takeElementFromRight(this.cube[0]),
+            "R": () => this.takeElementFromRight(this.turnCubeClockwise(this.cube)[2]),
+            "R'": () => this.takeElementFromLeft(this.turnCubeClockwise(this.cube)[2]),
+            "L": () => this.takeElementFromLeft(this.turnCubeClockwise(this.cube)[0]),
+            "L'": () => this.takeElementFromRight(this.turnCubeClockwise(this.cube)[0]),
+            "B": () => this.takeElementFromRight(this.cube[2]),
+            "B'": () => this.takeElementFromLeft(this.cube[2]),
+            "Q": () => {return `Bye~`}
         }
     }
 
