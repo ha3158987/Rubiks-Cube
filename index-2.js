@@ -25,7 +25,7 @@ class Model {
             ["G", "B", "B"]
         ];
 
-        this.direction = {      //엘리먼트가 한칸씩 움직인 array를 리턴받음 ["w", "R", "R"].
+        this.direction = {
             "U": () => this.takeElementFromLeft(this.cube[0]),
             "U'": () => this.takeElementFromRight(this.cube[0]),
             "R": () => this.takeElementFromRight((this.turnCubeClockwise(this.cube))[2]),
@@ -62,7 +62,7 @@ class Model {
         return cube;
     }
 
-    //시계반대방향으로 90도 회전 - L이나 R의 경우에는 요소 바꾼 뒤에 다시 counterClockwise로 바꿔놔야함.
+    //시계반대방향으로 90도 회전
     turnCubeCounterClockwise(cube){
         cube.forEach((row) => row.reverse());
            for (let i = 0; i < cube.length; i++) {
@@ -84,16 +84,29 @@ class View {
             const str = row.join(" ");
             template += `${str}<br>`;
         })
+
+        template += `<br>`
         return template;
     }
 
     getInputValue(){
         const inputValue = document.querySelector("#step2-input").value;
+        //여기서 ["B", "B'", "L", "L'"] 이런식으로 바꿔서 넘겨줘야함.
+
         return inputValue.split("");
     }
 
     renderUI(inputBox, template){
         inputBox.innerHTML = template;
+        this.resetToDefaultStatus();
+    }
+
+    resetToDefaultStatus(){
+        const form = document.querySelector(".input_form2");
+        const input = document.querySelector("#step2-input");
+
+        form.reset();
+        input.focus();
     }
 
 }
@@ -107,7 +120,7 @@ class Controller {
     }
 
     init() {
-        this.view.makeStringsIntoCubeShape(this.model.cube, null, this.template);
+        this.template = this.view.makeStringsIntoCubeShape(this.model.cube, null, this.template);
         this.addEvent();
     }
 
@@ -124,25 +137,17 @@ class Controller {
             this.model.direction[type]();
 
             if (this.isRightOrLeftColumn(type)){
-                this.turnCubeToOriginalPosition(this.model.cube);
+                this.model.turnCubeCounterClockwise(this.model.cube);
             }
 
             this.template = this.view.makeStringsIntoCubeShape(this.model.cube, type, this.template);
-            this.template += `<br>`;
         })
 
         this.view.renderUI(answerBox, this.template);
     }
 
     isRightOrLeftColumn(type){
-        if (type === "R" || type === "R'" || type === "L" || type === "L'"){
-            return true;
-        }
-        return false;
-    }
-
-    turnCubeToOriginalPosition(cube){
-        this.model.turnCubeCounterClockwise(cube);
+        return (type === "R" || type === "R'" || type === "L" || type === "L'") ? true : false ;
     }
 }
 
