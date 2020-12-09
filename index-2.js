@@ -8,13 +8,7 @@
 너무 크지 않은 함수 단위로 구현하려고 노력할 것
 전역변수의 사용을 자제할 것
 객체와 배열을 적절히 활용할 것
-
-- takeElementFromRight & takeElementFromLeft를 재사용하기. import & export로 다시 시도해보기
-- 위로 밀거나 아래로 미는 건 -90도로 회전하게 되면 오른쪽/왼쪽으로 미는 것과 같아진다. 회전하는 함수 구현 필요
 */
-// const wordRotator = require("./index");
-// import { wordRotator } from './index.js';
-// console.log(wordRotator.takeElementFromLeft);
 
 //------------------------------------ 평면 큐브 전반에 필요한 데이터를 관리 & 핸들링하는 Model 클래스
 class Model {
@@ -34,7 +28,7 @@ class Model {
             "L'": () => this.takeElementFromRight((this.turnCubeClockwise(this.cube))[0]),
             "B": () => this.takeElementFromRight(this.cube[2]),
             "B'": () => this.takeElementFromLeft(this.cube[2]),
-            "Q": () => {return `Bye~`}
+            "Q": () => {return `Bye~🖐`}
         }
     }
 
@@ -90,10 +84,26 @@ class View {
     }
 
     getInputValue(){
-        const inputValue = document.querySelector("#step2-input").value;
-        //여기서 ["B", "B'", "L", "L'"] 이런식으로 바꿔서 넘겨줘야함.
+        const inputValue = (document.querySelector("#step2-input").value).split("");
+        const filteredStrings = this.filterInputValue(inputValue);
 
-        return inputValue.split("");
+        return filteredStrings;
+    }
+
+    filterInputValue(inputString) {
+        let array = [];
+
+        inputString.forEach((el, idx) => {
+            if (el === "'") {
+                let mergedEl = `${inputString[idx - 1]}`;
+                mergedEl += el;
+                el = mergedEl;
+                array.pop();
+            }
+            array.push(el);
+        })
+
+        return array;
     }
 
     renderUI(inputBox, template){
@@ -125,8 +135,11 @@ class Controller {
     }
 
     addEvent(){
-        const button = document.querySelector(".step2-answer-button");
-        button.addEventListener("click", this.executeClickEvent.bind(this));
+        const inputButton = document.querySelector(".step2-answer-button");
+        const refreshButton = document.querySelector(".refresh");
+
+        inputButton.addEventListener("click", this.executeClickEvent.bind(this));
+        refreshButton.addEventListener("click", this.reloadPage);
     }
 
     executeClickEvent(){
@@ -134,20 +147,28 @@ class Controller {
         const directionArray = this.view.getInputValue();
 
         directionArray.forEach((type)=> {
-            this.model.direction[type]();
+            if (type === "Q"){
+                const endMessage = this.model.direction[type]();
+                this.template = endMessage;
+                return;
+            } else {
+                this.model.direction[type]();
+            }
 
             if (this.isRightOrLeftColumn(type)){
                 this.model.turnCubeCounterClockwise(this.model.cube);
             }
-
             this.template = this.view.makeStringsIntoCubeShape(this.model.cube, type, this.template);
         })
-
         this.view.renderUI(answerBox, this.template);
     }
 
     isRightOrLeftColumn(type){
         return (type === "R" || type === "R'" || type === "L" || type === "L'") ? true : false ;
+    }
+
+    reloadPage(){
+        location.reload();
     }
 }
 
