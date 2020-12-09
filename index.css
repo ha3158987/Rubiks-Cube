@@ -62,3 +62,10 @@ input {
   margin: 1rem 2rem;
   font-size: 1rem;
 }
+
+.refresh {
+  display: inline-block;
+  border: 1px solid #555;
+  padding: 0.5rem 1rem;
+  font-size: 1rem;
+}
