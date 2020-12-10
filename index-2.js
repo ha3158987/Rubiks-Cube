@@ -59,11 +59,11 @@ class Model {
     //시계반대방향으로 90도 회전
     turnCubeCounterClockwise(cube){
         cube.forEach((row) => row.reverse());
-           for (let i = 0; i < cube.length; i++) {
-               for (let j = 0; j < i; j++) {
-                 [cube[i][j], cube[j][i]] = [cube[j][i], cube[i][j]];
-               }
-           }
+        for (let i = 0; i < cube.length; i++) {
+            for (let j = 0; j < i; j++) {
+                [cube[i][j], cube[j][i]] = [cube[j][i], cube[i][j]];
+            }
+        }
         return cube;
     }
 
