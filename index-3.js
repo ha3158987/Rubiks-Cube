@@ -26,7 +26,7 @@ class Data {
         }
 
         // this.orderType = {
-        //     "F":,
+        //     "F": ,
         //     "F'":,//=> "F"를 세번 돌리는 것과 똑같음.
         //     "R":,
         //     "R'":,
@@ -40,6 +40,28 @@ class Data {
         //     "D'":,
         //     "Q":
         // }
+    }
+
+    //시계방향으로 90도 회전
+    turnSideClockwise(side){
+        for (let i = 0; i < side.length; i++) {
+            for (let j = 0; j < i; j++) {
+                [side[i][j], side[j][i]] = [side[j][i], side[i][j]];
+            }
+        }
+        side.forEach((row) => row.reverse());
+        return side;
+    }
+
+    //시계반대방향으로 90도 회전
+    turnSideCounterClockwise(side){
+        side.forEach((row) => row.reverse());
+        for (let i = 0; i < side.length; i++) {
+            for (let j = 0; j < i; j++) {
+                [side[i][j], side[j][i]] = [side[j][i], side[i][j]];
+            }
+        }
+        return side;
     }
 
     breakdownInputString (str) {
