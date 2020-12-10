@@ -120,8 +120,8 @@ input {
 
 .box {
   border: 1px solid #555;
-  height: 6rem;
-  width: 6rem;
+  height: 3rem;
+  width: 3rem;
 }
 
 #L,
@@ -130,13 +130,17 @@ input {
 #B {
   display: inline-block;
   margin: 0.25rem;
+  text-align: center;
+  vertical-align: middle;
 }
 
 #U,
 #D {
-  margin-left: 11.2rem;
+  margin-left: 14.1rem;
   margin-top: 0.5rem;
   margin-bottom: 0.5rem;
+  text-align: center;
+  vertical-align: middle;
 }
 
 .invisible {

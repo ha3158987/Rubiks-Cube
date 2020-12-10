@@ -17,11 +17,11 @@ Q를 입력받으면 프로그램을 종료하고, 조작 받은 명령의 갯�
 class Data {
     constructor(){
         this.cube = {
-            "front": Array(3).fill(0).map(el => Array(3).fill("O")),
-            "back": Array(3).fill(0).map(el => Array(3).fill("Y")),
-            "left": Array(3).fill(0).map(el => Array(3).fill("W")),
-            "right": Array(3).fill(0).map(el => Array(3).fill("G")),
             "up": Array(3).fill(0).map(el => Array(3).fill("B")),
+            "left": Array(3).fill(0).map(el => Array(3).fill("W")),
+            "front": Array(3).fill(0).map(el => Array(3).fill("O")),
+            "right": Array(3).fill(0).map(el => Array(3).fill("G")),
+            "back": Array(3).fill(0).map(el => Array(3).fill("Y")),
             "down": Array(3).fill(0).map(el => Array(3).fill("R")),
         }
     }
@@ -29,8 +29,8 @@ class Data {
     breakdownInputString (str) {
         const inputArray = this.combineApostrophe(str.split(""));
         const convertedArray = this.convertNumberToLetter(inputArray);
-        console.log(inputArray);
         console.log(convertedArray);
+        return convertedArray;
     }
 
     combineApostrophe(arr){
@@ -57,7 +57,6 @@ class Data {
             if (isNaN(el * 1) === false) {
                 num = el * 1;
                 prevLetter = arr[idx - 1];
-                // debugger;
                 const tempArr = Array(num - 1).fill(prevLetter);
                 newArray = [...newArray, ...tempArr];
                 return;
@@ -70,13 +69,45 @@ class Data {
 
 //------------------------Visual클래스: UI렌더링과 DOM핸들링을 관할--------------------------
 class Visual {
-    //this.cube에 있는 요소들을 cube형태로 바꿔주는 함수 필요
-    //바뀐 큐브 형태의 string을 UI에 보여주는 함수 필요
-    readInputData() {
-        return document.querySelector("#step3-input").value;
+    constructor(){
+        this.box = {
+            "U": this._("#U"),
+            "L": this._("#L"),
+            "F": this._("#F"),
+            "R": this._("#R"),
+            "B": this._("#B"),
+            "D": this._("#D")
+        }
     }
 
+    _(selector, base = document) {
+        return base.querySelector(selector);
+    }
 
+    readInputData() {
+        return this._("#step3-input").value;
+    }
+
+    showInitialCube(cubeData) {
+        const domBoxes = Object.keys(this.box); //["U", "L", "F", "R", "B", "D"]
+        const cubeDataKeys = Object.keys(cubeData); //["up", "left", "front", "right", "back", "down"]
+
+        cubeDataKeys.forEach((side, idx) => {
+            const template = this.convertToCubeShape(cubeData[side]);
+            this.box[domBoxes[idx]].innerHTML = template;
+        })
+    }
+
+    convertToCubeShape(doubleArray) {
+        let template = ``;
+
+        doubleArray.forEach(row => {
+            const str = row.join(" ");
+            template += `${str}<br>`;
+        })
+
+        return template;
+    }
 
 }
 
@@ -89,6 +120,7 @@ class Operator {
 
     init(){
         this.addEvent();
+        this.visual.showInitialCube(this.data.cube);
     }
 
     addEvent(){
@@ -97,8 +129,7 @@ class Operator {
     }
 
     executeClickEvent(){
-        const inputString = this.visual.readInputData();
-        this.data.breakdownInputString(inputString);
+        const convertedString = this.data.breakdownInputString(this.visual.readInputData());
     }
 }
 
