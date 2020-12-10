@@ -136,7 +136,7 @@ class Controller {
 
     addEvent(){
         const inputButton = document.querySelector(".step2-answer-button");
-        const refreshButton = document.querySelector(".refresh");
+        const refreshButton = document.querySelector(".step2-refresh");
 
         inputButton.addEventListener("click", this.executeClickEvent.bind(this));
         refreshButton.addEventListener("click", this.reloadPage);

@@ -61,11 +61,34 @@ input {
   padding: 0.5rem 2rem;
   margin: 1rem 2rem;
   font-size: 1rem;
+  cursor: pointer;
 }
 
-.refresh {
+.step2-refresh {
   display: inline-block;
   border: 1px solid #555;
   padding: 0.5rem 1rem;
   font-size: 1rem;
+  cursor: pointer;
+}
+
+/*----------------------- step 3 --------------------------*/
+#step-3-result {
+  height: auto;
+}
+
+.step3-answer-button {
+  border: 1px solid #555;
+  padding: 0.5rem 2rem;
+  margin: 1rem 2rem;
+  font-size: 1rem;
+  cursor: pointer;
+}
+
+.step3-refresh {
+  display: inline-block;
+  border: 1px solid #555;
+  padding: 0.5rem 1rem;
+  font-size: 1rem;
+  cursor: pointer;
 }
