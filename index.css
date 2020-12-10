@@ -9,7 +9,26 @@ html {
   scroll-behavior: smooth;
   color: #555;
   font-size: 30px;
-  text-rendering: optimizeLegibility; /*텍스트 디스플레이를 최적화하는 메소드*/
+  text-rendering: optimizeLegibility;
+}
+
+.title {
+  font-size: 2rem;
+}
+
+section {
+  margin-bottom: 5rem;
+}
+
+section:after {
+  display: block;
+  height: 10px;
+  background-color: rgb(47, 92, 47);
+  content: " ";
+  width: 50rem;
+  margin-left: 1rem;
+  margin-top: 3rem;
+  margin-bottom: 3rem;
 }
 
 /*----------------------- step 1 --------------------------*/
@@ -75,6 +94,7 @@ input {
 /*----------------------- step 3 --------------------------*/
 #step-3-result {
   height: auto;
+  text-align: center;
 }
 
 .step3-answer-button {
@@ -91,4 +111,34 @@ input {
   padding: 0.5rem 1rem;
   font-size: 1rem;
   cursor: pointer;
+}
+
+.starting-message {
+  margin-top: 1rem;
+  font-weight: 500;
+}
+
+.box {
+  border: 1px solid #555;
+  height: 6rem;
+  width: 6rem;
+}
+
+#L,
+#F,
+#R,
+#B {
+  display: inline-block;
+  margin: 0.25rem;
+}
+
+#U,
+#D {
+  margin-left: 11.2rem;
+  margin-top: 0.5rem;
+  margin-bottom: 0.5rem;
+}
+
+.invisible {
+  display: none;
 }
