@@ -13,6 +13,7 @@ Q를 입력받으면 프로그램을 종료하고, 조작 받은 명령의 갯�
 모든 면을 맞추면 축하 메시지와 함께 프로그램을 자동 종료
 */
 
+//------------------------Data클래스: 데이터 저장 및 핸들링을 관할------------------------------
 class Data {
     constructor(){
         this.cube = {
@@ -24,16 +25,62 @@ class Data {
             "down": Array(3).fill(0).map(el => Array(3).fill("R")),
         }
     }
-}
 
-class Visual {
-    removeStartingMSG(){
-        const startingMessage = document.querySelector(".starting-message");
-        startingMessage.classList.add("invisible");
+    breakdownInputString (str) {
+        const inputArray = this.combineApostrophe(str.split(""));
+        const convertedArray = this.convertNumberToLetter(inputArray);
+        console.log(inputArray);
+        console.log(convertedArray);
     }
 
+    combineApostrophe(arr){
+        let newArray = [];
+
+        arr.forEach((el, idx) => {
+            if (el === "'") {
+                let mergedEl = `${arr[idx - 1]}`;
+                mergedEl += el;
+                el = mergedEl;
+                newArray.pop();
+            }
+            newArray.push(el);
+        })
+        return newArray;
+    }
+
+    convertNumberToLetter(arr){
+        let newArray = [];
+        let prevLetter;
+        let num;
+
+        arr.forEach((el, idx) => {
+            if (isNaN(el * 1) === false) {
+                num = el * 1;
+                prevLetter = arr[idx - 1];
+                // debugger;
+                const tempArr = Array(num - 1).fill(prevLetter);
+                newArray = [...newArray, ...tempArr];
+                return;
+            }
+            newArray.push(el);
+        })
+        return newArray;
+    }
 }
 
+//------------------------Visual클래스: UI렌더링과 DOM핸들링을 관할--------------------------
+class Visual {
+    //this.cube에 있는 요소들을 cube형태로 바꿔주는 함수 필요
+    //바뀐 큐브 형태의 string을 UI에 보여주는 함수 필요
+    readInputData() {
+        return document.querySelector("#step3-input").value;
+    }
+
+
+
+}
+
+//-------------Operator클래스: Visual클래스와 Data클래스를 연결해주고 전체적인 동작을 관할----------
 class Operator {
     constructor(data, visual) {
         this.data = data;
@@ -50,7 +97,8 @@ class Operator {
     }
 
     executeClickEvent(){
-        this.visual.removeStartingMSG();
+        const inputString = this.visual.readInputData();
+        this.data.breakdownInputString(inputString);
     }
 }
 
@@ -58,5 +106,3 @@ const data = new Data();
 const visual = new Visual();
 const rubiksCube = new Operator(data, visual);
 rubiksCube.init();
-
-console.dir(data.cube["back"]);
