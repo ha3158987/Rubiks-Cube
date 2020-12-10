@@ -17,13 +17,29 @@ Q를 입력받으면 프로그램을 종료하고, 조작 받은 명령의 갯�
 class Data {
     constructor(){
         this.cube = {
-            "up": Array(3).fill(0).map(el => Array(3).fill("B")),
-            "left": Array(3).fill(0).map(el => Array(3).fill("W")),
-            "front": Array(3).fill(0).map(el => Array(3).fill("O")),
-            "right": Array(3).fill(0).map(el => Array(3).fill("G")),
-            "back": Array(3).fill(0).map(el => Array(3).fill("Y")),
-            "down": Array(3).fill(0).map(el => Array(3).fill("R")),
+            "U": Array(3).fill(0).map(el => Array(3).fill("B")),
+            "L": Array(3).fill(0).map(el => Array(3).fill("W")),
+            "F": Array(3).fill(0).map(el => Array(3).fill("O")),
+            "R": Array(3).fill(0).map(el => Array(3).fill("G")),
+            "B": Array(3).fill(0).map(el => Array(3).fill("Y")),
+            "D": Array(3).fill(0).map(el => Array(3).fill("R")),
         }
+
+        // this.orderType = {
+        //     "F":,
+        //     "F'":,//=> "F"를 세번 돌리는 것과 똑같음.
+        //     "R":,
+        //     "R'":,
+        //     "U":,
+        //     "U'":,
+        //     "B":,
+        //     "B'":,
+        //     "L":,
+        //     "L'":,
+        //     "D":,
+        //     "D'":,
+        //     "Q":
+        // }
     }
 
     breakdownInputString (str) {
@@ -39,8 +55,7 @@ class Data {
         arr.forEach((el, idx) => {
             if (el === "'") {
                 let mergedEl = `${arr[idx - 1]}`;
-                mergedEl += el;
-                el = mergedEl;
+                el = (mergedEl += el);
                 newArray.pop();
             }
             newArray.push(el);
@@ -50,13 +65,11 @@ class Data {
 
     convertNumberToLetter(arr){
         let newArray = [];
-        let prevLetter;
-        let num;
 
         arr.forEach((el, idx) => {
             if (isNaN(el * 1) === false) {
-                num = el * 1;
-                prevLetter = arr[idx - 1];
+                let num = el * 1;
+                let prevLetter = arr[idx - 1];
                 const tempArr = Array(num - 1).fill(prevLetter);
                 newArray = [...newArray, ...tempArr];
                 return;
@@ -70,7 +83,7 @@ class Data {
 //------------------------Visual클래스: UI렌더링과 DOM핸들링을 관할--------------------------
 class Visual {
     constructor(){
-        this.box = {
+        this.DOMbox = {
             "U": this._("#U"),
             "L": this._("#L"),
             "F": this._("#F"),
@@ -89,16 +102,15 @@ class Visual {
     }
 
     showInitialCube(cubeData) {
-        const domBoxes = Object.keys(this.box); //["U", "L", "F", "R", "B", "D"]
-        const cubeDataKeys = Object.keys(cubeData); //["up", "left", "front", "right", "back", "down"]
+        const domBoxes = Object.keys(this.DOMbox); //["U", "L", "F", "R", "B", "D"]
 
-        cubeDataKeys.forEach((side, idx) => {
-            const template = this.convertToCubeShape(cubeData[side]);
-            this.box[domBoxes[idx]].innerHTML = template;
+        domBoxes.forEach((side) => {
+            const template = this.makeSquareShapeTemplate(cubeData[side]);
+            this.DOMbox[side].innerHTML = template;
         })
     }
 
-    convertToCubeShape(doubleArray) {
+    makeSquareShapeTemplate(doubleArray) {
         let template = ``;
 
         doubleArray.forEach(row => {
@@ -129,7 +141,7 @@ class Operator {
     }
 
     executeClickEvent(){
-        const convertedString = this.data.breakdownInputString(this.visual.readInputData());
+        const convertedString = this.data.breakdownInputString(this.visual.readInputData()); //["F", "R", "R'", "U", "U", "R"]
     }
 }
 
