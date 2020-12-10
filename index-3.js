@@ -27,6 +27,10 @@ class Data {
 }
 
 class Visual {
+    removeStartingMSG(){
+        const startingMessage = document.querySelector(".starting-message");
+        startingMessage.classList.add("invisible");
+    }
 
 }
 
@@ -36,7 +40,18 @@ class Operator {
         this.visual = visual;
     }
 
-    init(){}
+    init(){
+        this.addEvent();
+    }
+
+    addEvent(){
+        const enterButton = document.querySelector(".step3-answer-button");
+        enterButton.addEventListener("click", this.executeClickEvent.bind(this));
+    }
+
+    executeClickEvent(){
+        this.visual.removeStartingMSG();
+    }
 }
 
 const data = new Data();
