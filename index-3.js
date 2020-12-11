@@ -13,7 +13,7 @@ Q를 입력받으면 프로그램을 종료하고, 조작 받은 명령의 갯�
 모든 면을 맞추면 축하 메시지와 함께 프로그램을 자동 종료
 */
 
-//------------------------Data클래스: 데이터 저장 및 핸들링을 관할------------------------------
+//---------------------- Data클래스의 역할: 데이터 저장 맟 핸들링 --------------------------
 class Data {
     constructor(){
         this.cube = {
@@ -40,28 +40,6 @@ class Data {
         //     "D'":,
         //     "Q":
         // }
-    }
-
-    //시계방향으로 90도 회전
-    turnSideClockwise(side){
-        for (let i = 0; i < side.length; i++) {
-            for (let j = 0; j < i; j++) {
-                [side[i][j], side[j][i]] = [side[j][i], side[i][j]];
-            }
-        }
-        side.forEach((row) => row.reverse());
-        return side;
-    }
-
-    //시계반대방향으로 90도 회전
-    turnSideCounterClockwise(side){
-        side.forEach((row) => row.reverse());
-        for (let i = 0; i < side.length; i++) {
-            for (let j = 0; j < i; j++) {
-                [side[i][j], side[j][i]] = [side[j][i], side[i][j]];
-            }
-        }
-        return side;
     }
 
     breakdownInputString (str) {
@@ -102,7 +80,32 @@ class Data {
     }
 }
 
-//------------------------Visual클래스: UI렌더링과 DOM핸들링을 관할--------------------------
+//------------------ Rotation클래스의 역할: 큐브의 회전과 엘리먼트의 이동 ----------------------
+class Rotation {
+    //시계방향으로 90도 회전
+    turnSideClockwise(side){
+        for (let i = 0; i < side.length; i++) {
+            for (let j = 0; j < i; j++) {
+                [side[i][j], side[j][i]] = [side[j][i], side[i][j]];
+            }
+        }
+        side.forEach((row) => row.reverse());
+        return side;
+    }
+
+    //시계반대방향으로 90도 회전
+    turnSideCounterClockwise(side){
+        side.forEach((row) => row.reverse());
+        for (let i = 0; i < side.length; i++) {
+            for (let j = 0; j < i; j++) {
+                [side[i][j], side[j][i]] = [side[j][i], side[i][j]];
+            }
+        }
+        return side;
+    }
+}
+
+//--------------------- Visual클래스의 역할: UI렌더링과 DOM핸들링 ---------------------------
 class Visual {
     constructor(){
         this.DOMbox = {
@@ -123,7 +126,7 @@ class Visual {
         return this._("#step3-input").value;
     }
 
-    showInitialCube(cubeData) {
+    renderCube(cubeData) {
         const domBoxes = Object.keys(this.DOMbox); //["U", "L", "F", "R", "B", "D"]
 
         domBoxes.forEach((side) => {
@@ -145,16 +148,17 @@ class Visual {
 
 }
 
-//-------------Operator클래스: Visual클래스와 Data클래스를 연결해주고 전체적인 동작을 관할----------
+//------------ Operator클래스의 역할: 각 클래스들을 연결하고 전체적인 프로세스를 컨트롤 --------------
 class Operator {
-    constructor(data, visual) {
+    constructor(data, rotate, visual) {
         this.data = data;
+        this.rotate = rotate;
         this.visual = visual;
     }
 
     init(){
         this.addEvent();
-        this.visual.showInitialCube(this.data.cube);
+        this.visual.renderCube(this.data.cube);
     }
 
     addEvent(){
@@ -168,6 +172,7 @@ class Operator {
 }
 
 const data = new Data();
+const rotate = new Rotation();
 const visual = new Visual();
-const rubiksCube = new Operator(data, visual);
+const rubiksCube = new Operator(data, rotate, visual);
 rubiksCube.init();
