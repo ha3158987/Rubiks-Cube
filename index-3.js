@@ -16,6 +16,9 @@ Q를 입력받으면 프로그램을 종료하고, 조작 받은 명령의 갯�
 //---------------------- Data클래스의 역할: 데이터 저장 맟 핸들링 --------------------------
 class Data {
     constructor(){
+
+        this.triple_arr = [];
+
         this.cube = {
             "U": Array(3).fill(0).map(el => Array(3).fill("B")),
             "L": Array(3).fill(0).map(el => Array(3).fill("W")),
@@ -25,24 +28,27 @@ class Data {
             "D": Array(3).fill(0).map(el => Array(3).fill("R")),
         }
 
-        // this.orderType = {
-        //     "F": ,
-        //     "F'":,//=> "F"를 세번 돌리는 것과 똑같음.
-        //     "R":,
-        //     "R'":,
-        //     "U":,
-        //     "U'":,
-        //     "B":,
-        //     "B'":,
-        //     "L":,
-        //     "L'":,
-        //     "D":,
-        //     "D'":,
-        //     "Q":
-        // }
+        this.orderType = {
+            "F": ["[0][2][0]", "[0][2][1]", "[0][2][2]", "[1][0][2]", "[1][1][2]", "[1][2][2]", "[3][0][0]", "[3][1][0]", "[3][2][0]", "[5][0][0]", "[5][0][1]", "[5][0][2]"], //F면 90도 시계방향 회전
+            "R":["[0][0][2]", "[0][1][2]", "[0][2][2]", "[2][0][2]", "[2][1][2]", "[2][2][2]", "[4][0][0]", "[4][1][0]", "[4][2][0]", "[5][0][2]", "[5][1][2]", "[5][2][2]"], //R면 90도 시계방향 회전
+            "U": ["[1][0][0]", "[1][0][1]", "[1][0][2]", "[2][0][0]", "[2][0][1]", "[2][0][2]", "[3][0][0]", "[3][0][1]", "[3][0][2]", "[4][0][0]", "[4][0][1]", "[4][0][2]"], //U면 90도 시계방향 회전
+            "B": ["[0][0][0]", "[0][0][1]", "[0][0][2]", "[1][0][0]", "[1][1][0]", "[1][2][0]", "[3][0][2]", "[3][1][2]", "[3][2][2]", "[5][2][0]", "[5][2][1]", "[5][2][2]"], //B면 90도 시계방향 회전
+            "L": ["[0][0][0]", "[0][1][0]", "[0][2][0]", "[2][0][0]", "[2][1][0]", "[2][2][0]", "[4][0][2]", "[4][1][2]", "[4][2][2]", "[5][0][0]", "[5][1][0]", "[5][2][0]"], //L면 90도 시계방향 회전
+            "D": ["[1][2][0]", "[1][2][1]", "[1][2][2]", "[2][2][0]", "[2][2][1]", "[2][2][2]", "[3][2][0]", "[3][2][1]", "[3][2][2]", "[4][2][0]", "[4][2][1]", "[4][2][2]"] //D면 90도 시계방향 회전
+            // "Q":
+        }
     }
 
-    breakdownInputString (str) {
+    //3차원 배열 만들기
+    makeTripleArr() {
+        const keys = Object.keys(this.cube); //["U", "L", "F", "R", "B", "D"]
+        keys.forEach(key => {
+            this.triple_arr.push(this.cube[key]);
+        })
+        console.log(this.triple_arr);
+    }
+
+    breakdownInputString(str) {
         const inputArray = this.combineApostrophe(str.split(""));
         const convertedArray = this.convertNumberToLetter(inputArray);
         console.log(convertedArray);
@@ -82,8 +88,9 @@ class Data {
 
 //------------------ Rotation클래스의 역할: 큐브의 회전과 엘리먼트의 이동 ----------------------
 class Rotation {
-    //바뀌어야 하는 인접 면들의 요소들을 새로운 임시배열에 담기
-    getElementFromEachSide(leftSide, upSide, rightSide, downSide){ //각 면마다 이중배열들이 들어옴.
+
+    //바뀌어야 하는 인접 면들의 요소들을 새로운 임시배열에 담기; F(front)면과 B(back)면 적용가능.
+    getElementFromEachSide(leftSide, upSide, rightSide, downSide){ //각 면마다 이중배열들이 들어옴. F(front)면과 B(back)면 적용가능.
         let tempArray = [];
 
         tempArray[0] = [leftSide[0].pop(), leftSide[1].pop(), leftSide[2].pop()];
@@ -95,14 +102,8 @@ class Rotation {
         return this.returnNewElementToEachSide(tempArray, leftSide, upSide, rightSide, downSide);
     }
 
-    //임시배열들을 오른쪽으로 밀기
-    pushElementToRight(arr){
-        const poppedElement = arr.pop();
-        arr.unshift(poppedElement);
-        return arr;
-    }
 
-    //요소를 가져왔던 인접 4면에 다시 바뀐 요소들을 넣어주기
+    //요소를 가져왔던 인접 4면에 다시 바뀐 요소들을 넣어주기; F(front)면과 B(back)면 적용가능.
     returnNewElementToEachSide(array, leftSide, upSide, rightSide, downSide){
         let sidesArray = [];
 
@@ -121,6 +122,18 @@ class Rotation {
         return sidesArray;
     }
 
+    //임시배열들을 오른쪽으로 밀기
+    pushElementToRight(arr){
+        const poppedElement = arr.pop();
+        arr.unshift(poppedElement);
+        return arr;
+    }
+
+    pushElementToLeft(arr){
+        const shiftedElement = arr.shift();
+        arr.push(shiftedElement);
+        return arr;
+    }
 
     //시계방향으로 90도 회전
     turnSideClockwise(side){
@@ -199,6 +212,7 @@ class Operator {
     init(){
         this.addEvent();
         this.visual.renderCube(this.data.cube);
+        this.data.makeTripleArr();
     }
 
     addEvent(){
@@ -208,8 +222,6 @@ class Operator {
 
     executeClickEvent(){
         const convertedString = this.data.breakdownInputString(this.visual.readInputData()); //["F", "R", "R'", "U", "U", "R"]
-        //각 면의 변경되어야 할 부분들이 변경되어 바뀐 면들을 반환받는다. U면과 D면의 경우, 각각 인접한 면의 0번째줄과 2번째 줄을 가져와 회전한다.
-        //(+중심이 되는 면은 시계방향으로 90도 돌려준 뒤 반환한다. U면과 D면의 경우, 중신이 되는 면을 "반시계방향"으로 90도 돌려줘야한다.)
         // convertedString.forEach(directionType => {
 
         // })
