@@ -82,6 +82,22 @@ class Data {
 
 //------------------ Rotation클래스의 역할: 큐브의 회전과 엘리먼트의 이동 ----------------------
 class Rotation {
+
+    getElementFromEachSide(leftSide, upperSide, rightSide, downSide){ //각 면마다 이중배열들이 들어옴.
+        const tempArray = [];
+        tempArray[0] = [leftSide[0].pop(), leftSide[1].pop(), leftSide[2].pop()];
+        tempArray[1] = [upperSide.pop()];
+        tempArray[2] = [rightSide[0].shift(), rightSide[1].shift(), rightSide[2].shift()];
+        tempArray[3] = [downSide.shift()];
+
+        console.dir(tempArray);
+        console.log(leftSide, upperSide, rightSide, downSide);
+
+    }
+
+    pushElementToRight(){}
+
+
     //시계방향으로 90도 회전
     turnSideClockwise(side){
         for (let i = 0; i < side.length; i++) {
@@ -168,6 +184,9 @@ class Operator {
 
     executeClickEvent(){
         const convertedString = this.data.breakdownInputString(this.visual.readInputData()); //["F", "R", "R'", "U", "U", "R"]
+        //각 면의 변경되어야 할 부분들이 변경되어 바뀐 면들을 반환받는다. U면과 D면의 경우, 각각 인접한 면의 0번째줄과 2번째 줄을 가져와 회전한다.
+        //(+중심이 되는 면은 시계방향으로 90도 돌려준 뒤 반환한다. U면과 D면의 경우, 중신이 되는 면을 "반시계방향"으로 90도 돌려줘야한다.)
+        this.rotate.getElementFromEachSide(this.data.cube["L"], this.data.cube["U"], this.data.cube["R"], this.data.cube["D"]);
     }
 }
 
