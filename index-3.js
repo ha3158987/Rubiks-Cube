@@ -35,7 +35,6 @@ class Data {
             "B": ["[0][0][0]", "[0][0][1]", "[0][0][2]", "[1][0][0]", "[1][1][0]", "[1][2][0]", "[3][0][2]", "[3][1][2]", "[3][2][2]", "[5][2][0]", "[5][2][1]", "[5][2][2]"], //B면 90도 시계방향 회전
             "L": ["[0][0][0]", "[0][1][0]", "[0][2][0]", "[2][0][0]", "[2][1][0]", "[2][2][0]", "[4][0][2]", "[4][1][2]", "[4][2][2]", "[5][0][0]", "[5][1][0]", "[5][2][0]"], //L면 90도 시계방향 회전
             "D": ["[1][2][0]", "[1][2][1]", "[1][2][2]", "[2][2][0]", "[2][2][1]", "[2][2][2]", "[3][2][0]", "[3][2][1]", "[3][2][2]", "[4][2][0]", "[4][2][1]", "[4][2][2]"] //D면 90도 시계방향 회전
-            // "Q":
         }
     }
 
@@ -88,39 +87,6 @@ class Data {
 
 //------------------ Rotation클래스의 역할: 큐브의 회전과 엘리먼트의 이동 ----------------------
 class Rotation {
-
-    //바뀌어야 하는 인접 면들의 요소들을 새로운 임시배열에 담기; F(front)면과 B(back)면 적용가능.
-    getElementFromEachSide(leftSide, upSide, rightSide, downSide){ //각 면마다 이중배열들이 들어옴. F(front)면과 B(back)면 적용가능.
-        let tempArray = [];
-
-        tempArray[0] = [leftSide[0].pop(), leftSide[1].pop(), leftSide[2].pop()];
-        tempArray[1] = upSide.pop();
-        tempArray[2] = [rightSide[0].shift(), rightSide[1].shift(), rightSide[2].shift()];
-        tempArray[3] = downSide.shift();
-
-        tempArray = this.pushElementToRight(tempArray);
-        return this.returnNewElementToEachSide(tempArray, leftSide, upSide, rightSide, downSide);
-    }
-
-
-    //요소를 가져왔던 인접 4면에 다시 바뀐 요소들을 넣어주기; F(front)면과 B(back)면 적용가능.
-    returnNewElementToEachSide(array, leftSide, upSide, rightSide, downSide){
-        let sidesArray = [];
-
-        for(let i = 0; i <= 2; i++){
-            leftSide[i].push(array[0][i]);
-        }
-
-        for(let j = 0; j <= 2; j++){
-            rightSide[j].unshift(array[2][j]);
-        }
-
-        upSide.push(array[1]);
-        downSide.unshift(array[3])
-
-        sidesArray = [leftSide, upSide, rightSide, downSide];
-        return sidesArray;
-    }
 
     //임시배열들을 오른쪽으로 밀기
     pushElementToRight(arr){
@@ -222,13 +188,23 @@ class Operator {
 
     executeClickEvent(){
         const convertedString = this.data.breakdownInputString(this.visual.readInputData()); //["F", "R", "R'", "U", "U", "R"]
-        // convertedString.forEach(directionType => {
+        convertedString.forEach(type => {
+            const arrIdx = this.data.orderType[type[0]];
+            //"Q"일 경우 바로 종료 메세지 출력
+            if (type === "Q") {
+                //종료메세지 UI에 띄우기
+                return;
+            }
 
-        // })
-        const adjacentSides = this.rotate.getElementFromEachSide(this.data.cube["L"], this.data.cube["U"], this.data.cube["R"], this.data.cube["D"]); //실행과 동시에 바뀜. 배열로 받음.
-        const frontSide = this.rotate.turnSideClockwise(this.data.cube["F"]);
-        console.log(adjacentSides);
-        console.log(frontSide);
+            //'가 붙은 것들을 먼저 걸러야함.
+            else if (type[1] === "'") {
+                console.log("arrIdx", arrIdx);
+                //type[0]으로 실행한 후, pushElementToLeft 와 turnSideCounterClockwise 실행.
+            } else {
+                console.log("arrIdx", arrIdx);//["[0][2][0]", "[0][2][1]", "[0][2][2]", "[1][0][2]", "[1][1][2]", "[1][2][2]", "[3][0][0]", "[3][1][0]", "[3][2][0]", "[5][0][0]", "[5][0][1]", "[5][0][2]"]
+
+            }
+        })
     }
 }
 
