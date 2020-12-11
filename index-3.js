@@ -225,27 +225,33 @@ class Operator {
                 //type[0]으로 실행한 후, pushElementToLeft 와 turnSideCounterClockwise 실행.
             } else {
                 console.log("arrIdx", arrIdx);
-                this.rotateClockwise(arrIdx);
+                this.rotateClockwise(arrIdx, type);
 
             }
         })
     }
 
-    rotateClockwise(arrIdx){
+    rotateClockwise(arrIdx, type){
         const tempArr = this.data.getChangingEl(arrIdx);  //["B", "B", "B", "W", "W", "W", "G", "G", "G", "R", "R", "R"]
+        const triArrIdx = this.getIndexOfType(type);
 
-        //엘리먼트가 3개씩 묶어주지 않는 대신 3번을 밀어줘야 함.
-        for (let i = 1; i <= 3; i++){
+        for (let i = 1; i <= 3; i++){  //엘리먼트가 3개씩 묶어주지 않는 대신 3번을 밀어줘야 함.
             this.rotate.pushElementToRight(tempArr);
         }
         console.log("tempArr after push", tempArr);
-        this.data.reassignEl(arrIdx, tempArr); ////다시 가져온 인덱스에 바뀐 엘리먼트 재할당 해주기
-
-
+        this.data.reassignEl(arrIdx, tempArr); //다시 가져온 인덱스에 바뀐 엘리먼트 재할당 해주기
+        this.rotate.turnSideClockwise(this.data.triple_arr[triArrIdx]); //중심이 되는 면 시계방향으로 돌려주기
+        //바뀐 전개도 모양이랑 type 을 DOM에 추가하기
     }
 
     rotateCounterClockwise(){
 
+    }
+
+    getIndexOfType(type){
+        const nameArr = ["U", "L", "F", "R", "B", "D"];
+        const index = nameArr.indexOf(type);
+        return index;
     }
 }
 
