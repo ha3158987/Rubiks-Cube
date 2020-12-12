@@ -177,6 +177,30 @@ class Visual {
         })
     }
 
+    makeChildDiv(type, trpleArr){
+        const container = this._("#step-3-result");
+        const childDiv = document.createElement("div");
+        let template = ``;
+
+        if (type === "Q") {
+            template += `<br>이용해주셔서 감사합니다! 😊  <br>뚜뚜뚜...<br>`;
+        } else {
+            template += `<div class="starting-message">< ${type} ></div>
+            <div id="U" class="box">${this.makeSquareShapeTemplate(trpleArr[0])}</div>
+            <div class="vertical-center">
+                <div id="L" class="box">${this.makeSquareShapeTemplate(trpleArr[1])}</div>
+                <div id="F" class="box">${this.makeSquareShapeTemplate(trpleArr[2])}</div>
+                <div id="R" class="box">${this.makeSquareShapeTemplate(trpleArr[3])}</div>
+                <div id="B" class="box">${this.makeSquareShapeTemplate(trpleArr[4])}</div>
+            </div>
+            <div id="D" class="box">${this.makeSquareShapeTemplate(trpleArr[5])}</div>`;
+        }
+
+        childDiv.innerHTML = template;
+        container.appendChild(childDiv);
+    }
+
+
     makeSquareShapeTemplate(doubleArray) {
         let template = ``;
 
@@ -216,12 +240,14 @@ class Operator {
             //"Q"일 경우 바로 종료 메세지 출력
             if (type === "Q") {
                 //종료메세지 UI에 띄우기
+                this.visual.makeChildDiv(type);
                 return;
             }
 
             //'가 붙은 것들을 먼저 걸러야함.
             else if (type[1] === "'") {
                 console.log("arrIdx", arrIdx);
+                this.rotateCounterClockwise(arrIdx, type);
                 //type[0]으로 실행한 후, pushElementToLeft 와 turnSideCounterClockwise 실행.
             } else {
                 console.log("arrIdx", arrIdx);
@@ -241,15 +267,15 @@ class Operator {
         console.log("tempArr after push", tempArr);
         this.data.reassignEl(arrIdx, tempArr); //다시 가져온 인덱스에 바뀐 엘리먼트 재할당 해주기
         this.rotate.turnSideClockwise(this.data.triple_arr[triArrIdx]); //중심이 되는 면 시계방향으로 돌려주기
-        //바뀐 전개도 모양이랑 type 을 DOM에 추가하기
+        this.visual.makeChildDiv(type, this.data.triple_arr); //바뀐 전개도 모양이랑 type 을 DOM에 추가하기
     }
 
-    rotateCounterClockwise(){
+    rotateCounterClockwise(arrIdx, type){
 
     }
 
     getIndexOfType(type){
-        const nameArr = ["U", "L", "F", "R", "B", "D"];
+        const nameArr = Object.keys(this.data.cube); //["U", "L", "F", "R", "B", "D"];
         const index = nameArr.indexOf(type);
         return index;
     }
