@@ -230,7 +230,9 @@ class Operator {
 
     addEvent(){
         const enterButton = document.querySelector(".step3-answer-button");
+        const refreshBtn = document.querySelector(".step3-refresh");
         enterButton.addEventListener("click", this.executeClickEvent.bind(this));
+        refreshBtn.addEventListener("click", this.reload);
     }
 
     executeClickEvent(){
@@ -248,7 +250,7 @@ class Operator {
             else if (type[1] === "'") {
                 console.log("arrIdx", arrIdx);
                 this.rotateCounterClockwise(arrIdx, type);
-                //type[0]으로 실행한 후, pushElementToLeft 와 turnSideCounterClockwise 실행.
+                //type[0]으로 필요한 인덱스를 가져온 후, pushElementToLeft 와 turnSideCounterClockwise 실행.
             } else {
                 console.log("arrIdx", arrIdx);
                 this.rotateClockwise(arrIdx, type);
@@ -285,6 +287,10 @@ class Operator {
         const nameArr = Object.keys(this.data.cube);
         const index = nameArr.indexOf(type);
         return index;
+    }
+
+    reload(){
+        location.reload();
     }
 }
 
