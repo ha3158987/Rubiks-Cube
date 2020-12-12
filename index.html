@@ -13,22 +13,45 @@
     </header>
     <section>
         <form class="input_form1" onsubmit="return false">
-            <label>영어로 된 단어 하나, -100과 100 사이의 정수 하나, L 혹은 R 중 하나를 선택해 차례대로 입력해주세요.
+            <label>영어로 된 단어 하나, -100과 100 사이의 정수 하나, L 혹은 R 중 하나를 선택해 차례대로 입력해주세요.<br>
             <input class="word" placeholder="이곳에 띄어쓰기를 이용해 순서대로 입력해 주세요. (콤마 불필요) ex. apple -2 L"></label><br>
             <label>실행결과<div class="answer"></div></label>
             <button class="button_enter">입력</button>
         </form>
     </section>
     <section>
-        <h1 class="title">2단계: 평면 큐브 구현하기</h1>
+        <h1 class="title">2단계: 평면 큐브</h1>
         <br>
         <form class="input_form2" onsubmit="return false">
             <label>U, U', R, R', L, L', B, B' 를 이용해  변경하고자 하는 큐브의 방향을 지정해주세요. <br>
-            &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Q 를 입력하면 프로그램이 종료됩니다. (연속해서 지정가능) ex. UUR
+            &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Q 를 입력하면 프로그램이 종료됩니다. (연속해서 지정가능) ex. UUR<br>
             <input id="step2-input" class="word" placeholder="cube>"></label><br>
             <label>실행결과<div class="answer" id="step-2-result"></div></label>
             <button class="step2-answer-button">입력</button>
-            <button class="refresh">새로고침</button>
+            <button class="step2-refresh">새로고침</button>
+        </form>
+    </section>
+    <section>
+        <h1 class="title">3단계: 루빅스 큐브</h1>
+        <br>
+        <form class="input_form3" onsubmit="return false">
+            <label>F, F', R, R', U, U', B, B', L, L', D, D'를 이용해 큐브블록의 이동방향을 지정해주세요. <br>
+            &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;같은방향으로의 연속된 이동은 숫자로 표현할 수 있습니다. ex. FRR'U2R (FRR'UUR)<br>
+            &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Q 를 입력하면 프로그램이 종료됩니다.<br>
+            <input id="step3-input" class="word" placeholder="cube>"></label><br>
+            <label>실행결과<div class="answer" id="step-3-result">
+                <div class="starting-message">< 초기상태 ></div>
+                <div id="U" class="box"></div>
+                <div class="vertical-center">
+                    <div id="L" class="box"></div>
+                    <div id="F" class="box"></div>
+                    <div id="R" class="box"></div>
+                    <div id="B" class="box"></div>
+                </div>
+                <div id="D" class="box"></div>
+            </div></label>
+            <button class="step3-answer-button">입력</button>
+            <button class="step3-refresh">새로고침</button>
         </form>
     </section>
     <section>

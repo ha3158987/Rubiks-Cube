@@ -1,14 +1,4 @@
-/*
-2단계: 평면 큐브 구현하기
-1. 처음 시작하면 초기 상태를 출력한다.
-2. 간단한 프롬프트 (CLI에서 키보드 입력받기 전에 표시해주는 간단한 글자들 - 예: CUBE> )를 표시해 준다.
-3. 한 번에 여러 문자를 입력받은 경우 순서대로 처리해서 매 과정을 화면에 출력한다.
-
-***주의사항***
-너무 크지 않은 함수 단위로 구현하려고 노력할 것
-전역변수의 사용을 자제할 것
-객체와 배열을 적절히 활용할 것
-*/
+/* 2단계: 평면 큐브 구현하기 */
 
 //------------------------------------ 평면 큐브 전반에 필요한 데이터를 관리 & 핸들링하는 Model 클래스
 class Model {
@@ -59,11 +49,11 @@ class Model {
     //시계반대방향으로 90도 회전
     turnCubeCounterClockwise(cube){
         cube.forEach((row) => row.reverse());
-           for (let i = 0; i < cube.length; i++) {
-               for (let j = 0; j < i; j++) {
-                 [cube[i][j], cube[j][i]] = [cube[j][i], cube[i][j]];
-               }
-           }
+        for (let i = 0; i < cube.length; i++) {
+            for (let j = 0; j < i; j++) {
+                [cube[i][j], cube[j][i]] = [cube[j][i], cube[i][j]];
+            }
+        }
         return cube;
     }
 
@@ -136,7 +126,7 @@ class Controller {
 
     addEvent(){
         const inputButton = document.querySelector(".step2-answer-button");
-        const refreshButton = document.querySelector(".refresh");
+        const refreshButton = document.querySelector(".step2-refresh");
 
         inputButton.addEventListener("click", this.executeClickEvent.bind(this));
         refreshButton.addEventListener("click", this.reloadPage);
