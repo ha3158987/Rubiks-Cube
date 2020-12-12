@@ -30,12 +30,12 @@ class Data {
         }
 
         this.orderType = {
-            "F": ["020", "021", "022", "102", "112", "122", "300", "310", "320", "500", "501", "502"], //F면 90도 시계방향 회전
-            "R": ["002", "012", "022", "202", "212", "222", "400", "410", "420", "502", "512", "522"], //R면 90도 시계방향 회전
-            "U": ["100", "101", "102", "200", "201", "202", "300", "301", "302", "400", "401", "402"], //U면 90도 시계방향 회전
-            "B": ["000", "001", "002", "100", "110", "120", "302", "312", "322", "520", "521", "522"], //B면 90도 시계방향 회전
-            "L": ["000", "010", "020", "200", "210", "220", "402", "412", "422", "500", "510", "520"], //L면 90도 시계방향 회전
-            "D": ["120", "121", "122", "220", "221", "222", "320", "321", "322", "420", "421", "422"] //D면 90도 시계방향 회전
+            "F": ["020", "021", "022", "102", "112", "122", "300", "310", "320", "500", "501", "502"],
+            "R": ["002", "012", "022", "202", "212", "222", "400", "410", "420", "502", "512", "522"],
+            "U": ["100", "101", "102", "200", "201", "202", "300", "301", "302", "400", "401", "402"],
+            "B": ["000", "001", "002", "100", "110", "120", "302", "312", "322", "520", "521", "522"],
+            "L": ["000", "010", "020", "200", "210", "220", "402", "412", "422", "500", "510", "520"],
+            "D": ["120", "121", "122", "220", "221", "222", "320", "321", "322", "420", "421", "422"]
         }
     }
 
@@ -45,7 +45,6 @@ class Data {
         keys.forEach(key => {
             this.triple_arr.push(this.cube[key]);
         })
-        console.log("3차원 배열 오리지날", this.triple_arr);
     }
 
     //(회전을 위한)임시 배열 만들기
@@ -57,7 +56,6 @@ class Data {
             tempArray.push(targetEl);
         })
 
-        console.log("tempArray", tempArray);
         return tempArray;
     }
 
@@ -67,13 +65,11 @@ class Data {
         tempArr.forEach((el, idx) => {
             this.triple_arr[parseInt(idxArr[idx][0])][parseInt(idxArr[idx][1])][parseInt(idxArr[idx][2])] = el;
         })
-        console.log("회전 후 3차원 배열", this.triple_arr);
     }
 
     breakdownInputString(str) {
         const inputArray = this.combineApostrophe(str.split(""));
         const convertedArray = this.convertNumberToLetter(inputArray);
-        console.log(convertedArray);
         return convertedArray;
     }
 
@@ -150,6 +146,7 @@ class Rotation {
 //--------------------------------------------------- Visual클래스의 역할: UI렌더링과 DOM핸들링 --------------------------------------------------------
 class Visual {
     constructor(){
+        this.countRendering = 0;
         this.DOMbox = {
             "U": this._("#U"),
             "L": this._("#L"),
@@ -178,12 +175,10 @@ class Visual {
     }
 
     makeChildDiv(type, trpleArr){
-        const container = this._("#step-3-result");
-        const childDiv = document.createElement("div");
         let template = ``;
 
         if (type === "Q") {
-            template += `<br>이용해주셔서 감사합니다! 😊  <br>뚜뚜뚜...<br>`;
+            template += `<br>▪︎ 조작횟수: ${this.countRendering}<br>▪︎ 경과시간: <br>이용해주셔서 감사합니다 😊  <br>뚜뚜뚜...<br>`;
         } else {
             template += `<div class="starting-message">< ${type} ></div>
             <div id="U" class="box">${this.makeSquareShapeTemplate(trpleArr[0])}</div>
@@ -195,9 +190,7 @@ class Visual {
             </div>
             <div id="D" class="box">${this.makeSquareShapeTemplate(trpleArr[5])}</div>`;
         }
-
-        childDiv.innerHTML = template;
-        container.appendChild(childDiv);
+        this.renderTemplate(template);
     }
 
 
@@ -208,8 +201,16 @@ class Visual {
             const str = row.join(" ");
             template += `${str}<br>`;
         })
-
         return template;
+    }
+
+    renderTemplate(template){
+        const container = this._("#step-3-result");
+        const childDiv = document.createElement("div");
+
+        childDiv.innerHTML = template;
+        container.appendChild(childDiv);
+        this.countRendering++;
     }
 
 }
@@ -231,28 +232,23 @@ class Operator {
     addEvent(){
         const enterButton = document.querySelector(".step3-answer-button");
         const refreshBtn = document.querySelector(".step3-refresh");
-        enterButton.addEventListener("click", this.executeClickEvent.bind(this));
+        enterButton.addEventListener("click", this.executeClickEvent.bind(this, enterButton));
         refreshBtn.addEventListener("click", this.reload);
     }
 
-    executeClickEvent(){
+    executeClickEvent(enterButton){
         const convertedString = this.data.breakdownInputString(this.visual.readInputData()); //["F", "R", "R'", "U", "U", "R"]
         convertedString.forEach(type => {
             const arrIdx = this.data.orderType[type[0]];
-            //"Q"일 경우 바로 종료 메세지 출력
             if (type === "Q") {
-                //종료메세지 UI에 띄우기
                 this.visual.makeChildDiv(type);
+                
+                enterButton.removeEventListener("click", this.executeClickEvent); //동작안됌.
+                //remove click 이벤트 + 누적된 명령어 수 카운트
                 return;
-            }
-
-            //'가 붙은 것들을 먼저 걸러야함.
-            else if (type[1] === "'") {
-                console.log("arrIdx", arrIdx);
+            }  else if (type[1] === "'") {
                 this.rotateCounterClockwise(arrIdx, type);
-                //type[0]으로 필요한 인덱스를 가져온 후, pushElementToLeft 와 turnSideCounterClockwise 실행.
             } else {
-                console.log("arrIdx", arrIdx);
                 this.rotateClockwise(arrIdx, type);
 
             }
