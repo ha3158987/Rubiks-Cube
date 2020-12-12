@@ -1,13 +1,4 @@
-/*
-큐브는 W, B, G, Y, O, R의 6가지 색깔을 가지고 있다.
-입력: 각 조작법을 한 줄로 입력받는다.
-출력: 큐브의 6면을 펼친 상태로 출력한다.
-Q를 입력받으면 프로그램을 종료하고, 조작 받은 명령의 갯수를 출력시킨다.
-
-가능한 한 커밋을 자주 하고 구현의 의미가 명확하게 전달되도록 커밋 메시지를 작성할 것
-함수나 메소드는 한 번에 한 가지 일을 하고 가능하면 20줄이 넘지 않도록 구현한다.
-함수나 메소드의 들여쓰기를 가능하면 적게(3단계까지만) 할 수 있도록 노력해 본다.
-
+/* 3단계: 루빅스 큐브 구현하기
 *추가구현*
 프로그램 종료 시 경과 시간 출력
 큐브의 무작위 섞기 기능
@@ -102,6 +93,7 @@ class Data {
         })
         return newArray;
     }
+
 }
 
 //-------------------------------------------- Rotation클래스의 역할: 큐브의 회전과 엘리먼트의 이동 ---------------------------------------------------------
@@ -178,7 +170,7 @@ class Visual {
         let template = ``;
 
         if (type === "Q") {
-            template += `<br>▪︎ 조작횟수: ${this.countRendering}<br>▪︎ 경과시간: <br>이용해주셔서 감사합니다 😊  <br>뚜뚜뚜...<br>`;
+            template += `<br>▪︎ 조작횟수: ${this.countRendering}<br>이용해주셔서 감사합니다 😊  <br>뚜뚜뚜...<br>`;
         } else {
             template += `<div class="starting-message">< ${type} ></div>
             <div id="U" class="box">${this.makeSquareShapeTemplate(trpleArr[0])}</div>
@@ -242,9 +234,6 @@ class Operator {
             const arrIdx = this.data.orderType[type[0]];
             if (type === "Q") {
                 this.visual.makeChildDiv(type);
-                
-                enterButton.removeEventListener("click", this.executeClickEvent); //동작안됌.
-                //remove click 이벤트 + 누적된 명령어 수 카운트
                 return;
             }  else if (type[1] === "'") {
                 this.rotateCounterClockwise(arrIdx, type);
@@ -259,12 +248,12 @@ class Operator {
         const tempArr = this.data.getChangingEl(arrIdx);
         const triArrIdx = this.getIndexOfType(type);
 
-        for (let i = 1; i <= 3; i++){  //엘리먼트가 3개씩 묶어주지 않는 대신 3번을 밀어줘야 함.
+        for (let i = 1; i <= 3; i++){
             this.rotate.pushElementToRight(tempArr);
         }
-        this.data.reassignEl(arrIdx, tempArr); //다시 가져온 인덱스에 바뀐 엘리먼트 재할당 해주기
-        this.rotate.turnSideClockwise(this.data.triple_arr[triArrIdx]); //중심이 되는 면 시계방향으로 돌려주기
-        this.visual.makeChildDiv(type, this.data.triple_arr); //바뀐 전개도 모양이랑 type 을 DOM에 추가하기
+        this.data.reassignEl(arrIdx, tempArr);
+        this.rotate.turnSideClockwise(this.data.triple_arr[triArrIdx]);
+        this.visual.makeChildDiv(type, this.data.triple_arr);
     }
 
     rotateCounterClockwise(arrIdx, type){
