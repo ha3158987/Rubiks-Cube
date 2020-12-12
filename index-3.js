@@ -258,24 +258,31 @@ class Operator {
     }
 
     rotateClockwise(arrIdx, type){
-        const tempArr = this.data.getChangingEl(arrIdx);  //["B", "B", "B", "W", "W", "W", "G", "G", "G", "R", "R", "R"]
+        const tempArr = this.data.getChangingEl(arrIdx);
         const triArrIdx = this.getIndexOfType(type);
 
         for (let i = 1; i <= 3; i++){  //엘리먼트가 3개씩 묶어주지 않는 대신 3번을 밀어줘야 함.
             this.rotate.pushElementToRight(tempArr);
         }
-        console.log("tempArr after push", tempArr);
         this.data.reassignEl(arrIdx, tempArr); //다시 가져온 인덱스에 바뀐 엘리먼트 재할당 해주기
         this.rotate.turnSideClockwise(this.data.triple_arr[triArrIdx]); //중심이 되는 면 시계방향으로 돌려주기
         this.visual.makeChildDiv(type, this.data.triple_arr); //바뀐 전개도 모양이랑 type 을 DOM에 추가하기
     }
 
     rotateCounterClockwise(arrIdx, type){
+        const tempArr = this.data.getChangingEl(arrIdx);
+        const triArrIdx = this.getIndexOfType(type[0]);
 
+        for (let j = 1; j <= 3; j++){
+            this.rotate.pushElementToLeft(tempArr);
+        }
+        this.data.reassignEl(arrIdx, tempArr);
+        this.rotate.turnSideCounterClockwise(this.data.triple_arr[triArrIdx]);
+        this.visual.makeChildDiv(type, this.data.triple_arr);
     }
 
     getIndexOfType(type){
-        const nameArr = Object.keys(this.data.cube); //["U", "L", "F", "R", "B", "D"];
+        const nameArr = Object.keys(this.data.cube);
         const index = nameArr.indexOf(type);
         return index;
     }
