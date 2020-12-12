@@ -224,11 +224,11 @@ class Operator {
     addEvent(){
         const enterButton = document.querySelector(".step3-answer-button");
         const refreshBtn = document.querySelector(".step3-refresh");
-        enterButton.addEventListener("click", this.executeClickEvent.bind(this, enterButton));
+        enterButton.addEventListener("click", this.executeClickEvent.bind(this));
         refreshBtn.addEventListener("click", this.reload);
     }
 
-    executeClickEvent(enterButton){
+    executeClickEvent(){
         const convertedString = this.data.breakdownInputString(this.visual.readInputData()); //["F", "R", "R'", "U", "U", "R"]
         convertedString.forEach(type => {
             const arrIdx = this.data.orderType[type[0]];
