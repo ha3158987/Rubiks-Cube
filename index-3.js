@@ -2,7 +2,7 @@
 
 *추가구현*
 [O] 프로그램 종료 시 경과 시간 출력
-큐브의 무작위 섞기 기능
+[O] 큐브의 무작위 섞기 기능
 모든 면을 맞추면 축하 메시지와 함께 프로그램을 자동 종료
 */
 
@@ -10,8 +10,10 @@
 class Data {
     constructor(){
 
+        this.origin_arr;
         this.triple_arr = [];
         this.keys = []; //["U", "L", "F", "R", "B", "D"]
+        this.randomKeys = ["U", "L", "F", "R", "B", "D", "U'", "L'", "F'", "R'", "B'", "D'"];
         this.playingTime = 0;
         this.cube = {
             "U": Array(3).fill(0).map(el => Array(3).fill("B")),
@@ -37,6 +39,21 @@ class Data {
         this.keys.forEach(key => {
             this.triple_arr.push(this.cube[key]);
         })
+        //시작 상태의 원본배열 복사해두기
+        this.origin_arr = JSON.parse(JSON.stringify(this.triple_arr));
+    }
+
+    makeRandomArr(){//0에서 11사이의 랜덤 숫자를 받아서 인덱스로 처리(랜덤믹스에 사용)
+        const keysArr = [];
+
+        for (let i = 0; i < 5; i++){
+            keysArr.push(this.randomKeys[this.getRandomNum(0, 11)]);
+        }
+        return keysArr;
+    }
+
+    getRandomNum (min, max) {
+        return Math.floor(Math.random() * (max - min + 1)) + min;
     }
 
     //(회전을 위한)임시 배열 만들기
@@ -115,7 +132,6 @@ class Data {
 //-------------------------------------------- Rotation클래스의 역할: 큐브의 회전과 엘리먼트의 이동 ---------------------------------------------------------
 class Rotation {
 
-    //임시배열들을 오른쪽으로 밀기
     pushElementToRight(arr){
         const poppedElement = arr.pop();
         arr.unshift(poppedElement);
@@ -128,7 +144,6 @@ class Rotation {
         return arr;
     }
 
-    //시계방향으로 90도 회전
     turnSideClockwise(side){
         for (let i = 0; i < side.length; i++) {
             for (let j = 0; j < i; j++) {
@@ -139,7 +154,6 @@ class Rotation {
         return side;
     }
 
-    //시계반대방향으로 90도 회전
     turnSideCounterClockwise(side){
         side.forEach((row) => row.reverse());
         for (let i = 0; i < side.length; i++) {
@@ -198,7 +212,7 @@ class Visual {
             </div>
             <div id="D" class="box">${this.makeSquareShapeTemplate(trpleArr[5])}</div>`;
         }
-        this.renderTemplate(template);
+        return template;
     }
 
 
@@ -238,10 +252,13 @@ class Operator {
     }
 
     addEvent(){
-        const enterButton = document.querySelector(".step3-answer-button");
-        const refreshBtn = document.querySelector(".step3-refresh");
+        const enterButton = this.visual._(".step3-answer-button");
+        const refreshBtn = this.visual._(".step3-refresh");
+        const mixButton = this.visual._(".step3-mix");
+
         enterButton.addEventListener("click", this.executeClickEvent.bind(this));
         refreshBtn.addEventListener("click", this.reload);
+        mixButton.addEventListener("click", this.mixArray.bind(this));
     }
 
     executeClickEvent(){
@@ -249,14 +266,16 @@ class Operator {
         const convertedString = this.data.breakdownInputString(this.visual.readInputData());
         convertedString.forEach(type => {
             const arrIdx = this.data.orderType[type[0]];
+            let template;
             if (type === "Q") {
                 this.visual.makeChildDiv(type, this.data.triple_arr, this.data.convertPlayingTimeToString());
                 return;
             }  else if (type[1] === "'") {
-                this.rotateCounterClockwise(arrIdx, type);
+                template = this.rotateCounterClockwise(arrIdx, type);
+                this.visual.renderTemplate(template);
             } else {
-                this.rotateClockwise(arrIdx, type);
-
+                template = this.rotateClockwise(arrIdx, type);
+                this.visual.renderTemplate(template);
             }
         })
     }
@@ -270,7 +289,7 @@ class Operator {
         }
         this.data.reassignEl(arrIdx, tempArr);
         this.rotate.turnSideClockwise(this.data.triple_arr[triArrIdx]);
-        this.visual.makeChildDiv(type, this.data.triple_arr);
+        return this.visual.makeChildDiv(type, this.data.triple_arr);
     }
 
     rotateCounterClockwise(arrIdx, type){
@@ -282,7 +301,20 @@ class Operator {
         }
         this.data.reassignEl(arrIdx, tempArr);
         this.rotate.turnSideCounterClockwise(this.data.triple_arr[triArrIdx]);
-        this.visual.makeChildDiv(type, this.data.triple_arr);
+        return this.visual.makeChildDiv(type, this.data.triple_arr);
+    }
+
+    mixArray(){
+        const randomKeyArr = this.data.makeRandomArr();
+        randomKeyArr.forEach(el => {
+            const arrIdx = this.data.orderType[el[0]];
+            if (el[1] === "'") {
+                this.rotateCounterClockwise(arrIdx, el);
+            } else {
+                this.rotateClockwise(arrIdx, el);
+            }
+        })
+        this.visual.renderCube(this.data.cube);
     }
 
     getIndexOfType(type){
