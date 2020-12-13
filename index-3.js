@@ -265,7 +265,8 @@ class Operator {
             const arrIdx = this.data.orderType[type[0]];
             let template;
             if (type === "Q") {
-                this.visual.makeChildDiv(type, this.data.triple_arr, this.data.convertPlayingTimeToString());
+                template = this.visual.makeChildDiv(type, this.data.triple_arr, this.data.convertPlayingTimeToString());
+                this.visual.renderTemplate(template);
                 this.isGameOn = false;
                 return;
             }  else if (type[1] === "'") {
@@ -276,7 +277,7 @@ class Operator {
                 this.visual.renderTemplate(template);
             }
         })
-        if (this.isEqual()) this.endGame();
+        if (this.isEqual() && this.isGameOn) this.endGame();
     }
 
     rotateClockwise(arrIdx, type){
