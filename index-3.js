@@ -12,7 +12,7 @@ class Data {
 
         this.origin_arr;
         this.triple_arr = [];
-        this.keys = []; //["U", "L", "F", "R", "B", "D"]
+        this.keys = [];
         this.randomKeys = ["U", "L", "F", "R", "B", "D", "U'", "L'", "F'", "R'", "B'", "D'"];
         this.playingTime = 0;
         this.cube = {
@@ -240,6 +240,7 @@ class Visual {
 //------------------------------------------- Operator클래스의 역할: 각 클래스들을 연결하고 전체적인 프로세스를 컨트롤 --------------------------------------------
 class Operator {
     constructor(data, rotate, visual) {
+        this.isGameOn = false;
         this.data = data;
         this.rotate = rotate;
         this.visual = visual;
@@ -262,6 +263,7 @@ class Operator {
     }
 
     executeClickEvent(){
+        this.isGameOn = true;
         this.data.countPlayingTime();
         const convertedString = this.data.breakdownInputString(this.visual.readInputData());
         convertedString.forEach(type => {
@@ -278,6 +280,7 @@ class Operator {
                 this.visual.renderTemplate(template);
             }
         })
+        if (this.isEqual()) this.endGame();
     }
 
     rotateClockwise(arrIdx, type){
@@ -321,6 +324,19 @@ class Operator {
         const nameArr = Object.keys(this.data.cube);
         const index = nameArr.indexOf(type);
         return index;
+    }
+
+    isEqual(){
+        const str1 = JSON.stringify(this.data.origin_arr);
+        const str2 = JSON.stringify(this.data.triple_arr);
+        if (str1 === str2){
+            return true;
+        }
+        return false;
+    }
+
+    endGame(){
+        console.log("축하합니다! 큐브를 완성하셨습니다! ");
     }
 
     reload(){
