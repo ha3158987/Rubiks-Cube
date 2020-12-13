@@ -1,10 +1,4 @@
-/* 3단계: 루빅스 큐브 구현하기
-
-*추가구현*
-[O] 프로그램 종료 시 경과 시간 출력
-[O] 큐브의 무작위 섞기 기능
-모든 면을 맞추면 축하 메시지와 함께 프로그램을 자동 종료
-*/
+/* 3단계: 루빅스 큐브 구현하기 */
 
 //------------------------------------------------ Data클래스의 역할: 데이터 저장 맟 핸들링 ---------------------------------------------------------
 class Data {
@@ -39,11 +33,11 @@ class Data {
         this.keys.forEach(key => {
             this.triple_arr.push(this.cube[key]);
         })
-        //시작 상태의 원본배열 복사해두기
         this.origin_arr = JSON.parse(JSON.stringify(this.triple_arr));
     }
 
-    makeRandomArr(){//0에서 11사이의 랜덤 숫자를 받아서 인덱스로 처리(랜덤믹스에 사용)
+    //0에서 11사이의 랜덤 숫자를 받아서 인덱스로 처리(랜덤믹스에 사용)
+    makeRandomArr(){
         const keysArr = [];
 
         for (let i = 0; i < 5; i++){
@@ -68,7 +62,7 @@ class Data {
         return tempArray;
     }
 
-    //바뀐 요소들을 재할당 해주기
+    //바뀐 요소들을 재할당
     reassignEl(idxArr, tempArr) {
 
         tempArr.forEach((el, idx) => {
@@ -188,7 +182,7 @@ class Visual {
     }
 
     renderCube(cubeData) {
-        const domBoxes = Object.keys(this.DOMbox); //["U", "L", "F", "R", "B", "D"]
+        const domBoxes = Object.keys(this.DOMbox);
 
         domBoxes.forEach((side) => {
             const template = this.makeSquareShapeTemplate(cubeData[side]);
@@ -253,6 +247,7 @@ class Operator {
     }
 
     addEvent(){
+        this.isGameOn = true;
         const enterButton = this.visual._(".step3-answer-button");
         const refreshBtn = this.visual._(".step3-refresh");
         const mixButton = this.visual._(".step3-mix");
@@ -263,7 +258,7 @@ class Operator {
     }
 
     executeClickEvent(){
-        this.isGameOn = true;
+        if(!this.isGameOn) return;
         this.data.countPlayingTime();
         const convertedString = this.data.breakdownInputString(this.visual.readInputData());
         convertedString.forEach(type => {
@@ -271,6 +266,7 @@ class Operator {
             let template;
             if (type === "Q") {
                 this.visual.makeChildDiv(type, this.data.triple_arr, this.data.convertPlayingTimeToString());
+                this.isGameOn = false;
                 return;
             }  else if (type[1] === "'") {
                 template = this.rotateCounterClockwise(arrIdx, type);
@@ -329,14 +325,13 @@ class Operator {
     isEqual(){
         const str1 = JSON.stringify(this.data.origin_arr);
         const str2 = JSON.stringify(this.data.triple_arr);
-        if (str1 === str2){
-            return true;
-        }
-        return false;
+        return str1 === str2 ? true : false;
     }
 
     endGame(){
-        console.log("축하합니다! 큐브를 완성하셨습니다! ");
+        const endingMsg = this.visual._(".congrat_msg");
+        endingMsg.classList.remove("invisible");
+        this.isGameOn = false;
     }
 
     reload(){
