@@ -1,7 +1,7 @@
 /* 3단계: 루빅스 큐브 구현하기
 
 *추가구현*
-프로그램 종료 시 경과 시간 출력
+[O] 프로그램 종료 시 경과 시간 출력
 큐브의 무작위 섞기 기능
 모든 면을 맞추면 축하 메시지와 함께 프로그램을 자동 종료
 */
@@ -11,7 +11,8 @@ class Data {
     constructor(){
 
         this.triple_arr = [];
-
+        this.keys = []; //["U", "L", "F", "R", "B", "D"]
+        this.playingTime = 0;
         this.cube = {
             "U": Array(3).fill(0).map(el => Array(3).fill("B")),
             "L": Array(3).fill(0).map(el => Array(3).fill("W")),
@@ -20,7 +21,6 @@ class Data {
             "B": Array(3).fill(0).map(el => Array(3).fill("Y")),
             "D": Array(3).fill(0).map(el => Array(3).fill("R")),
         }
-
         this.orderType = {
             "F": ["020", "021", "022", "102", "112", "122", "300", "310", "320", "500", "501", "502"],
             "R": ["002", "012", "022", "202", "212", "222", "400", "410", "420", "502", "512", "522"],
@@ -33,8 +33,8 @@ class Data {
 
     //3차원 배열 만들기
     makeTripleArr() {
-        const keys = Object.keys(this.cube); //["U", "L", "F", "R", "B", "D"]
-        keys.forEach(key => {
+        this.keys = Object.keys(this.cube);
+        this.keys.forEach(key => {
             this.triple_arr.push(this.cube[key]);
         })
     }
@@ -95,6 +95,21 @@ class Data {
         return newArray;
     }
 
+    countPlayingTime(){
+        window.setInterval(() => {this.playingTime++}, 1000);
+    }
+
+    convertPlayingTimeToString(){
+        let string;
+        if(this.playingTime > 60) {
+            const min = Math.floor(this.playingTime / 60);
+            const sec = this.playingTime % 60;
+            string = `${min}분 ${sec}초`;
+        } else {
+            string = `${this.playingTime}초`;
+        }
+        return string;
+    }
 }
 
 //-------------------------------------------- Rotation클래스의 역할: 큐브의 회전과 엘리먼트의 이동 ---------------------------------------------------------
@@ -167,11 +182,11 @@ class Visual {
         })
     }
 
-    makeChildDiv(type, trpleArr){
+    makeChildDiv(type, trpleArr, playingTime){
         let template = ``;
 
         if (type === "Q") {
-            template += `<br>▪︎ 조작횟수: ${this.countRendering}<br>이용해주셔서 감사합니다 😊  <br>뚜뚜뚜...<br>`;
+            template += `<br>▪︎ 조작횟수: ${this.countRendering}<br>▪︎ 경과시간: ${playingTime}<br>이용해주셔서 감사합니다 😊  <br>뚜뚜뚜...<br>`;
         } else {
             template += `<div class="starting-message">< ${type} ></div>
             <div id="U" class="box">${this.makeSquareShapeTemplate(trpleArr[0])}</div>
@@ -230,11 +245,12 @@ class Operator {
     }
 
     executeClickEvent(){
-        const convertedString = this.data.breakdownInputString(this.visual.readInputData()); //["F", "R", "R'", "U", "U", "R"]
+        this.data.countPlayingTime();
+        const convertedString = this.data.breakdownInputString(this.visual.readInputData());
         convertedString.forEach(type => {
             const arrIdx = this.data.orderType[type[0]];
             if (type === "Q") {
-                this.visual.makeChildDiv(type);
+                this.visual.makeChildDiv(type, this.data.triple_arr, this.data.convertPlayingTimeToString());
                 return;
             }  else if (type[1] === "'") {
                 this.rotateCounterClockwise(arrIdx, type);
