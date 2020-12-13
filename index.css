@@ -145,10 +145,6 @@ input {
   vertical-align: middle;
 }
 
-.invisible {
-  display: none;
-}
-
 /*----------------------- step3 --------------------------*/
 
 .step3-answer-button {
@@ -164,4 +160,21 @@ input {
   margin: 1rem 2rem;
   font-size: 1rem;
   cursor: pointer;
+}
+
+.congrat_msg {
+  font-weight: 400;
+  font-size: 1.5rem;
+  background-color: #bff3e8;
+  position: absolute;
+  margin: 3rem 0rem;
+  padding: 2rem 0rem;
+  height: auto;
+  width: 34.95rem;
+  border: 2px solid rgb(230, 230, 230);
+  z-index: 99;
+}
+
+.invisible {
+  display: none;
 }
